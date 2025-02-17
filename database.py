@@ -89,5 +89,4 @@ def delete_user_by_id(tg_user_id):
     except sl.Error as e:
         print(f"Ошибка при удалении: {e}")
 
-# Пример использования:
-delete_user_by_id("database.db", "users", 123456789)
+
