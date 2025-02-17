@@ -31,7 +31,7 @@ def get_last_subscription(tg_user_id):
             return tg_user_id,human_readable_date(subscription_end), payment_key
         
         else:
-            return f"Не найдено записи для указанного id."
+            return False
 
     except Exception as e:
         # Обрабатываем ошибки
