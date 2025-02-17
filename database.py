@@ -41,7 +41,6 @@ def get_last_subscription(tg_user_id):
         # Закрываем соединение с базой
         con.close()
 
-
 def add_db(tg_user_id, first_name, last_name, key):
     # Подключаемся к базе данных
     con = sl.connect('users.db')
@@ -74,3 +73,21 @@ def add_db(tg_user_id, first_name, last_name, key):
     finally:
         # Закрываем соединение с базой
         con.close()
+
+
+def delete_user_by_id(tg_user_id):
+    """Удаляет запись из таблицы по tg_user_id."""
+    try:
+        con = sl.connect('users.db')
+        cur = con.cursor()
+        
+        query = f"DELETE FROM users WHERE tg_user_id = ?"
+        cur.execute(query, (tg_user_id,))
+        
+        con.commit()
+        con.close()
+    except sl.Error as e:
+        print(f"Ошибка при удалении: {e}")
+
+# Пример использования:
+delete_user_by_id("database.db", "users", 123456789)

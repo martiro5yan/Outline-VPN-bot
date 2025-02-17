@@ -35,15 +35,10 @@ def forward_to_support(message):
     username = f"@{message.from_user.username}" if message.from_user.username else "Нет username"
 
     # Формируем отредактированное сообщение
-    edited_text = (
-        f"📩 *Новая заявка в поддержку*\n"
-        f"👤 *Пользователь:* {first_name} {last_name}\n({username})\n"
-        f"🆔 *ID:* `{user_id}`\n"
-        f"💬 *Сообщение:*\n_{message.text}_"
-    )
+    edited_text = f"📩 Новая заявка в поддержку\n👤 Пользователь: {first_name} {last_name}\n({username})\n🆔 *ID:* {user_id}\n💬 Сообщение:\n{message.text}"
 
     # Отправляем сообщение в поддержку и сохраняем его ID
-    sent_message = bot.send_message(SUPPORT_CHAT_ID, edited_text, parse_mode="Markdown")
+    sent_message = bot.send_message(SUPPORT_CHAT_ID, edited_text)
     pending_requests[sent_message.message_id] = message.chat.id
 
     bot.send_message(message.chat.id, "✅ Ваша заявка отправлена в техподдержку.")
