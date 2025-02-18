@@ -46,11 +46,11 @@ def user_data(data):
 @bot.message_handler(commands=['start'])
 def start(message):
 
-    bot.send_message(admin_id, 'START +1')
+    bot.send_message(admin_id, f'START +1{username(message)}')
 
     if invoice_management.check_token_validity():
         markup = types.InlineKeyboardMarkup()
-        markup.add(types.InlineKeyboardButton('Нидерланды: 1 месяц 300 ₽', callback_data='300'))
+        markup.add(types.InlineKeyboardButton('Нидерланды: 1 месяц 99 ₽', callback_data='99'))
         markup.add(types.InlineKeyboardButton('Инструкция', callback_data='instruction'))
         markup.add(types.InlineKeyboardButton('Техподдержка', url='https://t.me/vpnytSupport_bot'))
 
@@ -64,19 +64,19 @@ def start(message):
 # Обработчик команды /manual
 @bot.message_handler(commands=['manual'])
 def manual_links(user):
-    bot.send_message(admin_id, 'MANUAL +1')
+    bot.send_message(admin_id, f'MANUAL +1{username(user)}')
     bot.send_message(user.chat.id, text.instruction_text, parse_mode='Markdown')
 
 # Обработчик для кнопки "Инструкция"
 @bot.callback_query_handler(func=lambda callback: callback.data == 'instruction')
 def send_help(callback):
-    bot.send_message(admin_id, 'INSTRU +1')
+    bot.send_message(admin_id, f'INSTRU +1{username(callback)}')
     bot.send_message(callback.message.chat.id, text.instruction_text, parse_mode='Markdown')
 
 @bot.message_handler(commands=['mykeys'])
 def return_user_keys(callback):
     
-    bot.send_message(admin_id, 'MYKEYS +1')
+    bot.send_message(admin_id, f'MYKEYS +1{username(callback)}')
 
     id = user_id(callback)
     
@@ -95,10 +95,10 @@ def return_user_keys(callback):
         bot.send_message(callback.chat.id, 'Активных ключей нет!')
 
 # Обработчик callback'ов для тарифов
-@bot.callback_query_handler(func=lambda callback: callback.data in ['300', '1500', '2800'])
+@bot.callback_query_handler(func=lambda callback: callback.data in ['99', '1500', '2800'])
 def handle_paid_key(callback):
 
-    bot.send_message(admin_id, 'Выбрал тариф +1')
+    bot.send_message(admin_id, f'Выбрал тариф +1{username(callback)}')
 
     price = callback.data
 
@@ -121,7 +121,7 @@ def handle_paid_key(callback):
 @bot.callback_query_handler(func=lambda callback: callback.data.startswith('check_payment_'))
 def check_payment_status(callback):
 
-    bot.send_message(admin_id, 'Проверил оплату +1')
+    bot.send_message(admin_id, f'Проверил оплату +1{username(callback)}')
 
     libel = callback.data.split('_')[2]  # Извлекаем метку
     test_libel = 'L8cD7cJhpM'
@@ -135,7 +135,7 @@ def check_payment_status(callback):
 
     if payment_status:
 
-        bot.send_message(admin_id, 'Оплатил +1')
+        bot.send_message(admin_id, f'Оплатил +1{username(callback)}')
         
         key = outline.create_new_key(key_id=user_key_id, name=str(user_id(callback)))
 
