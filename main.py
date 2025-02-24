@@ -71,7 +71,7 @@ def trial(callback):
         bot.send_message(callback.chat.id, 'Вы уже использовали пробный период!')
     else:
         
-        bot.send_message(admin_id, f'Активировал пробный период +1 @{username(callback.message.chat.id)}')
+        bot.send_message(admin_id, f'Активировал пробный период +1 @{username(callback)}')
         database.add_user_to_trial(callback.message.chat.id)
 
         user_key_id = f'{user_id(callback)}'
