@@ -67,12 +67,12 @@ def start(message):
 
 @bot.callback_query_handler(func=lambda callback: callback.data == 'trial')
 def trial(callback):
-    if database.is_user_in_db(callback.chat.id):
+    if database.is_user_in_db(callback.message.chat.id):
         bot.send_message(callback.chat.id, 'Вы уже использовали пробный период!')
     else:
         
-        bot.send_message(admin_id, f'Активировал пробный период +1 @{username(callback.chat.id)}')
-        database.add_user_to_trial(callback.chat.id)
+        bot.send_message(admin_id, f'Активировал пробный период +1 @{username(callback.message.chat.id)}')
+        database.add_user_to_trial(callback.message.chat.id)
 
         user_key_id = f'{user_id(callback)}'
 
