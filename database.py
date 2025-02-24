@@ -1,6 +1,41 @@
 import sqlite3 as sl
 from datetime import datetime, timedelta
 
+
+def add_user_to_trial(tg_user_id):
+    """Добавляет пользователя в таблицу trial_users."""
+    try:
+        # Подключаемся к базе данных
+        con = sl.connect('users.db')
+        cur = con.cursor()
+        
+        # Добавляем пользователя в таблицу trial_users
+        cur.execute("INSERT INTO trial_users (tg_user_id) VALUES (?)", (tg_user_id,))
+        
+        con.commit()
+        
+    except sl.Error as e:
+        print(f"Ошибка при добавлении пользователя в базу данных: {e}")
+    
+    finally:
+        # Закрываем соединение с базой данных
+        con.close()
+
+def is_user_in_db(tg_user_id):
+    """Проверяет, есть ли пользователь в базе данных по tg_user_id."""
+    try:
+        con = sl.connect('users.db')
+        cur = con.cursor()
+        
+        cur.execute("SELECT EXISTS(SELECT 1 FROM trial_users WHERE tg_user_id = ?)", (tg_user_id,))
+        return bool(cur.fetchone()[0])  # Возвращает True, если пользователь есть, иначе False
+
+    except sl.Error:
+        return False  # В случае ошибки также возвращаем False
+
+    finally:
+        con.close()
+
 def human_readable_date(date_str):
     # Преобразуем строку в объект datetime
     date_obj = datetime.strptime(date_str, "%Y-%m-%d %H:%M:%S")
@@ -75,18 +110,18 @@ def add_db(tg_user_id, first_name, last_name, key):
         con.close()
 
 
-def delete_user_by_id(tg_user_id):
-    """Удаляет запись из таблицы по tg_user_id."""
+def clear_purchased_key_by_id(tg_user_id):
+    """Очищает значение purchased_key у пользователя с tg_user_id."""
     try:
         con = sl.connect('users.db')
         cur = con.cursor()
         
-        query = f"DELETE FROM users WHERE tg_user_id = ?"
+        query = "UPDATE users SET purchased_key = NULL WHERE tg_user_id = ?"
         cur.execute(query, (tg_user_id,))
         
         con.commit()
         con.close()
     except sl.Error as e:
-        print(f"Ошибка при удалении: {e}")
+        print(f"Ошибка при обновлении: {e}")
 
 
