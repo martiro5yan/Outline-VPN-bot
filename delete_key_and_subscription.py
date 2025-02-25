@@ -8,7 +8,7 @@ import database
 
 user_id = sys.argv[1]
 
-API_TOCEN = '7707295263:AAGW1vLJjvQngYxKOxLUMpH8fpBE2I_8Exc'
+API_TOCEN = '7240622500:AAFL01ogk2InUs8ZFe077KicEO6URWHFpdk'
 message = "Ваша подписка окончена, ключ удален!"
 
 url = f'https://api.telegram.org/bot{API_TOCEN}/sendMessage'
