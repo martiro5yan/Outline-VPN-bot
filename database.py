@@ -2,6 +2,46 @@ import sqlite3 as sl
 from datetime import datetime, timedelta
 
 
+def is_user_in_db(tg_user_id):
+    """Проверяет, есть ли пользователь в базе данных по tg_user_id."""
+    try:
+        con = sl.connect('users.db')
+        cur = con.cursor()
+        
+        cur.execute("SELECT EXISTS(SELECT 1 FROM users WHERE tg_user_id = ?)", (tg_user_id,))
+        return bool(cur.fetchone()[0])  # Возвращает True, если пользователь есть, иначе False
+
+    except sl.Error:
+        return False  # В случае ошибки также возвращаем False
+
+    finally:
+        con.close()
+
+def update_purchased_key(tg_user_id, new_key):
+    # Подключаемся к базе данных
+    con = sl.connect('users.db')
+    cur = con.cursor()
+    
+    try:
+        # Обновляем purchased_key для указанного tg_user_id
+        cur.execute("""
+            UPDATE USERS 
+            SET purchased_key = ?
+            WHERE tg_user_id = ?
+        """, (new_key, tg_user_id))
+        
+        # Сохраняем изменения
+        con.commit()
+        
+        print("Ключ успешно обновлен.")
+    
+    except Exception as e:
+        print(f"Произошла ошибка: {e}")
+    
+    finally:
+        # Закрываем соединение с базой
+        con.close()
+
 def add_user_to_trial(tg_user_id):
     """Добавляет пользователя в таблицу trial_users."""
     try:
@@ -21,7 +61,7 @@ def add_user_to_trial(tg_user_id):
         # Закрываем соединение с базой данных
         con.close()
 
-def is_user_in_db(tg_user_id):
+def is_user_in_db_trial(tg_user_id):
     """Проверяет, есть ли пользователь в базе данных по tg_user_id."""
     try:
         con = sl.connect('users.db')

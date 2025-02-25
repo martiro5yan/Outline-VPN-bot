@@ -67,7 +67,7 @@ def start(message):
 
 @bot.callback_query_handler(func=lambda callback: callback.data == 'trial')
 def trial(callback):
-    if database.is_user_in_db(callback.message.chat.id):
+    if database.is_user_in_db_trial(callback.message.chat.id):
         bot.send_message(callback.chat.id, 'Вы уже использовали пробный период!')
     else:
         
@@ -127,19 +127,19 @@ def handle_paid_key(callback):
 
     bot.send_message(admin_id, f'Выбрал тариф +1 @{username(callback)}')
 
-    price = callback.data
+    handle_paid_key.price = callback.data
 
     user_key_id = f'{user_id(callback)}'
 
     # Создание ссылки на оплату
-    invoice_link = invoice_management.create_invoice(int(price))
+    invoice_link = invoice_management.create_invoice(int(handle_paid_key.price))
     if outline.user_key_info(user_key_id):
         markup = types.InlineKeyboardMarkup()
         markup.add(types.InlineKeyboardButton('Оплатить', url=invoice_link[0]))
         
         # Кнопка "Проверить оплату"
         markup.add(types.InlineKeyboardButton('Проверить оплату', callback_data=f'check_payment_{invoice_link[1]}'))
-        msg = bot.send_message(callback.message.chat.id, f'Сумма оплаты: {price} рублей\n1 - Оплатить\n2 - Нажать проверить оплату', reply_markup=markup)
+        msg = bot.send_message(callback.message.chat.id, f'Сумма оплаты: {handle_paid_key.price} рублей\n1 - Оплатить\n2 - Нажать проверить оплату', reply_markup=markup)
     else:
         bot.send_message(callback.message.chat.id,f'У вас уже имеется ключ, проверка /mykeys')
     # Отправка сообщения с суммой и кнопками
@@ -165,12 +165,16 @@ def check_payment_status(callback):
         bot.send_message(admin_id, f'Оплатил +1 @{username(callback)}')
         
         key = outline.create_new_key(key_id=user_key_id, name=str(user_id(callback)))
-
-        database.add_db(user_id(callback), first_name, last_name, key.access_url)
-        start_at_timer.start_timer(user_id(callback))
-        
-        text_message = (f"Оплата подтверждена! Ваш ключ активирован.\n'Метка об оплате-{libel}\n```{key.access_url}```")
-        bot.send_message(callback.message.chat.id, text_message,parse_mode='Markdown')
+        if database.is_user_in_db(user_id(callback)):
+            database.update_purchased_key(user_id(callback),key.access_url)
+            text_message = (f"Оплата подтверждена! Ваш ключ обновлен,вставте его в приложении Outline\n\n'Метка об оплате-{libel}\n\n```{key.access_url}```")
+            bot.send_message(callback.message.chat.id, text_message,parse_mode='Markdown')
+            start_at_timer.start_timer(user_id(callback))
+        else:    
+            database.add_db(user_id(callback), first_name, last_name, key.access_url)
+            start_at_timer.start_timer(user_id(callback))
+            text_message = (f"Оплата подтверждена! Ваш ключ активирован.\n'Метка об оплате-{libel}\n```{key.access_url}```")
+            bot.send_message(callback.message.chat.id, text_message,parse_mode='Markdown')
         
         # Удаление кнопок "Оплатить" и "Проверить оплату"
         bot.edit_message_reply_markup(callback.message.chat.id, callback.message.message_id, reply_markup=types.InlineKeyboardMarkup())
