@@ -4,7 +4,11 @@ import requests
 
 
 def start_timer_trial(user_id):
-    os.system(f"echo 'python delete_key_trial.py {user_id}' | at now +1 days")
+    if user_id == '395838481':
+        print('Старт таймера на админа')
+        os.system(f"echo 'python delete_key_trial.py {user_id}' | at now +1 minute")
+    else:
+        os.system(f"echo 'python delete_key_trial.py {user_id}' | at now +1 days")
 
 def start_timer(user_id):
     print('Старт таймера')

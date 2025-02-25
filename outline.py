@@ -13,6 +13,7 @@ gb = 1073741824
 
 
 def delete_key(key_id: str):
+    print('удалено')
     return client.delete_key(key_id)
 
 

@@ -25,16 +25,14 @@ def update_purchased_key(tg_user_id, new_key):
     try:
         # Обновляем purchased_key для указанного tg_user_id
         cur.execute("""
-            UPDATE USERS 
+            UPDATE users 
             SET purchased_key = ?
             WHERE tg_user_id = ?
         """, (new_key, tg_user_id))
         
         # Сохраняем изменения
         con.commit()
-        
-        print("Ключ успешно обновлен.")
-    
+
     except Exception as e:
         print(f"Произошла ошибка: {e}")
     

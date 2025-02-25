@@ -4,7 +4,7 @@ import outline
 
 
 
-
+print('удаление ключа')
 
 user_id = sys.argv[1]
 
