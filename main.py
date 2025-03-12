@@ -126,10 +126,11 @@ def return_user_keys(callback):
 # Обработчик callback'ов для тарифов
 @bot.callback_query_handler(func=lambda callback: callback.data in ['290', '2900'])
 def handle_paid_key(callback):
-
-    bot.send_message(admin_id, f'Выбрал тариф +1 @{username(callback)}')
-
     handle_paid_key.price = callback.data
+
+    bot.send_message(admin_id, f'Выбрал тариф {handle_paid_key.price} @{username(callback)}')
+
+    
 
     user_key_id = f'{user_id(callback)}'
 
@@ -166,7 +167,7 @@ def check_payment_status(callback):
     last_name = callback.from_user.last_name
     
     if handle_paid_key.price == '290':
-        subscription_period = '1'
+        subscription_period = '31'
     elif handle_paid_key.price == '2900':
         subscription_period = '365'
 
