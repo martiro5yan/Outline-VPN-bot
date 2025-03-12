@@ -25,12 +25,18 @@ def update_purchased_key(tg_user_id, new_key):
     cur = con.cursor()
     
     try:
-        # Обновляем purchased_key для указанного tg_user_id
+        # Получаем текущую дату и время для начала подписки
+        subscription_start = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        
+        # Рассчитываем дату окончания подписки (например, через 30 дней)
+        subscription_end = (datetime.now() + timedelta(days=30)).strftime("%Y-%m-%d %H:%M:%S")
+        
+        # Обновляем purchased_key, subscription_start и subscription_end для указанного tg_user_id
         cur.execute("""
             UPDATE users 
-            SET purchased_key = ?
+            SET purchased_key = ?, subscription_start = ?, subscription_end = ?
             WHERE tg_user_id = ?
-        """, (new_key, tg_user_id))
+        """, (new_key, subscription_start, subscription_end, tg_user_id))
         
         # Сохраняем изменения
         con.commit()
