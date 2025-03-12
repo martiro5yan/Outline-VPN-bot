@@ -19,7 +19,7 @@ def is_user_in_db(tg_user_id):
     finally:
         con.close()
 
-def update_purchased_key(tg_user_id, new_key):
+def update_purchased_key(tg_user_id, new_key,subscription_period):
     # Подключаемся к базе данных
     con = sl.connect(db_path)
     cur = con.cursor()
@@ -29,7 +29,7 @@ def update_purchased_key(tg_user_id, new_key):
         subscription_start = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         
         # Рассчитываем дату окончания подписки (например, через 30 дней)
-        subscription_end = (datetime.now() + timedelta(days=30)).strftime("%Y-%m-%d %H:%M:%S")
+        subscription_end = (datetime.now() + timedelta(days=subscription_period)).strftime("%Y-%m-%d %H:%M:%S")
         
         # Обновляем purchased_key, subscription_start и subscription_end для указанного tg_user_id
         cur.execute("""
@@ -122,7 +122,7 @@ def get_last_subscription(tg_user_id):
         # Закрываем соединение с базой
         con.close()
 
-def add_db(tg_user_id, first_name, last_name, key):
+def add_db(tg_user_id, first_name, last_name, key,subscription_period):
     # Подключаемся к базе данных
     con = sl.connect(db_path)
     cur = con.cursor()
@@ -132,7 +132,7 @@ def add_db(tg_user_id, first_name, last_name, key):
         subscription_start = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         
         # Рассчитываем дату окончания подписки (например, через 30 дней)
-        subscription_end = (datetime.now() + timedelta(days=30)).strftime("%Y-%m-%d %H:%M:%S")
+        subscription_end = (datetime.now() + timedelta(days=subscription_period)).strftime("%Y-%m-%d %H:%M:%S")
 
         # Добавляем данные в таблицу
         cur.execute("""

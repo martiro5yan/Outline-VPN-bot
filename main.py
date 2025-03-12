@@ -180,12 +180,12 @@ def check_payment_status(callback):
         
         key = outline.create_new_key(key_id=user_key_id, name=str(user_id(callback)))
         if database.is_user_in_db(user_id(callback)):
-            database.update_purchased_key(user_id(callback),key.access_url)
+            database.update_purchased_key(user_id(callback),key.access_url,int(subscription_period))
             text_message = (f"Оплата подтверждена! Ваш ключ обновлен,вставте его в приложении Outline\n\n'Метка об оплате-{libel}\n\n```{key.access_url}```")
             bot.send_message(callback.message.chat.id, text_message,parse_mode='Markdown')
             start_at_timer.start_timer(user_id(callback),subscription_period)
         else:    
-            database.add_db(user_id(callback), first_name, last_name, key.access_url)
+            database.add_db(user_id(callback), first_name, last_name, key.access_url,int(subscription_period))
             start_at_timer.start_timer(user_id(callback),subscription_period)
             text_message = (f"Оплата подтверждена! Ваш ключ активирован.\n'Метка об оплате-{libel}\n```{key.access_url}```")
             bot.send_message(callback.message.chat.id, text_message,parse_mode='Markdown')
