@@ -72,16 +72,17 @@ def trial(callback):
     else:
         
         bot.send_message(admin_id, f'Активировал пробный период +1 @{username(callback)}')
-
-        user_key_id = f'{user_id(callback)}'
-
-        key = outline.create_new_key(key_id=user_key_id, name=str(user_id(callback)))
-
-        text_message = (f"У вас есть 1 день пробного периода!\n\n```{key.access_url}```")
-        bot.send_message(callback.message.chat.id, text_message,parse_mode='Markdown')
         database.add_user_to_trial(callback.message.chat.id)
-        print(user_id(callback),type(user_id(callback)))
-        start_at_timer.start_timer_trial(user_id(callback))
+        user_key_id = f'{user_id(callback)}'
+        if outline.user_key_info(user_key_id):
+            key = outline.create_new_key(key_id=user_key_id, name=str(user_id(callback)))
+
+            text_message = (f"У вас есть 1 день пробного периода!\n\n```{key.access_url}```")
+            bot.send_message(callback.message.chat.id, text_message,parse_mode='Markdown')
+            print(user_id(callback),type(user_id(callback)))
+            start_at_timer.start_timer_trial(user_id(callback))
+        else:
+            bot.send_message(callback.message.chat.id,f'У вас уже имеется ключ, проверка /mykeys')
 
 # Обработчик команды /manual
 @bot.message_handler(commands=['manual'])
