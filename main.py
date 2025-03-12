@@ -53,8 +53,8 @@ def start(message):
     if invoice_management.check_token_validity():
         markup = types.InlineKeyboardMarkup()
         markup.add(types.InlineKeyboardButton('Попробовать бесплатно', callback_data='trial'))
-        markup.add(types.InlineKeyboardButton('Нидерланды: 1 месяц 300 ₽', callback_data='300'))
-        markup.add(types.InlineKeyboardButton('Нидерланды: 1 год 3000 ₽', callback_data='3000'))
+        markup.add(types.InlineKeyboardButton('Нидерланды: 1 месяц 290 ₽', callback_data='290'))
+        markup.add(types.InlineKeyboardButton('Нидерланды: 1 год 2900 ₽', callback_data='2900'))
         markup.add(types.InlineKeyboardButton('Инструкция', callback_data='instruction'))
         markup.add(types.InlineKeyboardButton('Техподдержка', url='https://t.me/vpnytSupport_bot'))
 
@@ -124,7 +124,7 @@ def return_user_keys(callback):
         bot.send_message(callback.chat.id, 'Активных ключей нет!')
 
 # Обработчик callback'ов для тарифов
-@bot.callback_query_handler(func=lambda callback: callback.data in ['300', '3000'])
+@bot.callback_query_handler(func=lambda callback: callback.data in ['290', '2900'])
 def handle_paid_key(callback):
 
     bot.send_message(admin_id, f'Выбрал тариф +1 @{username(callback)}')
@@ -149,19 +149,25 @@ def handle_paid_key(callback):
 # Обработчик для проверки статуса оплаты
 @bot.callback_query_handler(func=lambda callback: callback.data.startswith('check_payment_'))
 def check_payment_status(callback):
+    user_key_id = f'{user_id(callback)}'
 
     bot.send_message(admin_id, f'Проверил оплату +1 @{username(callback)}')
 
     libel = callback.data.split('_')[2]  # Извлекаем метку
     test_libel = 'L8cD7cJhpM'
-    user_key_id = f'{user_id(callback)}'
+    
+    if user_key_id == '395838481':
+        libel = 'L8cD7cJhpM'#TEST
+    else:
+        libel = callback.data.split('_')[2]
+
 
     first_name = callback.from_user.first_name
     last_name = callback.from_user.last_name
     
-    if handle_paid_key.price == '249':
+    if handle_paid_key.price == '290':
         subscription_period = '1'
-    elif handle_paid_key.price == '2500':
+    elif handle_paid_key.price == '2900':
         subscription_period = '365'
 
 
