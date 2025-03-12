@@ -2,10 +2,12 @@ import sqlite3 as sl
 from datetime import datetime, timedelta
 
 
+db_path = "/db_dir/users.db"
+
 def is_user_in_db(tg_user_id):
     """Проверяет, есть ли пользователь в базе данных по tg_user_id."""
     try:
-        con = sl.connect('users.db')
+        con = sl.connect(db_path)
         cur = con.cursor()
         
         cur.execute("SELECT EXISTS(SELECT 1 FROM users WHERE tg_user_id = ?)", (tg_user_id,))
@@ -19,7 +21,7 @@ def is_user_in_db(tg_user_id):
 
 def update_purchased_key(tg_user_id, new_key):
     # Подключаемся к базе данных
-    con = sl.connect('users.db')
+    con = sl.connect(db_path)
     cur = con.cursor()
     
     try:
@@ -44,7 +46,7 @@ def add_user_to_trial(tg_user_id):
     """Добавляет пользователя в таблицу trial_users."""
     try:
         # Подключаемся к базе данных
-        con = sl.connect('users.db')
+        con = sl.connect(db_path)
         cur = con.cursor()
         
         # Добавляем пользователя в таблицу trial_users
@@ -62,7 +64,7 @@ def add_user_to_trial(tg_user_id):
 def is_user_in_db_trial(tg_user_id):
     """Проверяет, есть ли пользователь в базе данных по tg_user_id."""
     try:
-        con = sl.connect('users.db')
+        con = sl.connect(db_path)
         cur = con.cursor()
         
         cur.execute("SELECT EXISTS(SELECT 1 FROM trial_users WHERE tg_user_id = ?)", (tg_user_id,))
@@ -85,7 +87,7 @@ def human_readable_date(date_str):
 
 def get_last_subscription(tg_user_id):
     # Подключаемся к базе данных
-    con = sl.connect('users.db')
+    con = sl.connect(db_path)
     cur = con.cursor()
     try:
         # Выполняем запрос, чтобы получить последний день подписки, ключ и tg_user_id
@@ -116,7 +118,7 @@ def get_last_subscription(tg_user_id):
 
 def add_db(tg_user_id, first_name, last_name, key):
     # Подключаемся к базе данных
-    con = sl.connect('users.db')
+    con = sl.connect(db_path)
     cur = con.cursor()
 
     try:
@@ -151,7 +153,7 @@ def add_db(tg_user_id, first_name, last_name, key):
 def clear_purchased_key_by_id(tg_user_id):
     """Очищает значение purchased_key у пользователя с tg_user_id."""
     try:
-        con = sl.connect('users.db')
+        con = sl.connect(db_path)
         cur = con.cursor()
         
         query = "UPDATE users SET purchased_key = NULL WHERE tg_user_id = ?"
