@@ -23,7 +23,8 @@ def update_purchased_key(tg_user_id, new_key,subscription_period):
     # Подключаемся к базе данных
     con = sl.connect(db_path)
     cur = con.cursor()
-    
+    if subscription_period == 1:
+        subscription_period = 30
     try:
         # Получаем текущую дату и время для начала подписки
         subscription_start = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -126,7 +127,8 @@ def add_db(tg_user_id, first_name, last_name, key,subscription_period):
     # Подключаемся к базе данных
     con = sl.connect(db_path)
     cur = con.cursor()
-
+    if subscription_period == 1:
+        subscription_period = 30
     try:
         # Получаем текущую дату и время для начала подписки
         subscription_start = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
