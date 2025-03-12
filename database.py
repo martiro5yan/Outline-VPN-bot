@@ -2,7 +2,7 @@ import sqlite3 as sl
 from datetime import datetime, timedelta
 
 
-db_path = "/db_dir/users.db"
+db_path = "/home/martirosyan/db_dir/users.db"
 
 def is_user_in_db(tg_user_id):
     """Проверяет, есть ли пользователь в базе данных по tg_user_id."""
