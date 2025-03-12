@@ -53,7 +53,8 @@ def start(message):
     if invoice_management.check_token_validity():
         markup = types.InlineKeyboardMarkup()
         markup.add(types.InlineKeyboardButton('Попробовать бесплатно', callback_data='trial'))
-        markup.add(types.InlineKeyboardButton('Нидерланды: 1 месяц 99 ₽', callback_data='99'))
+        markup.add(types.InlineKeyboardButton('Нидерланды: 1 месяц 300 ₽', callback_data='300'))
+        markup.add(types.InlineKeyboardButton('Нидерланды: 1 год 3000 ₽', callback_data='3000'))
         markup.add(types.InlineKeyboardButton('Инструкция', callback_data='instruction'))
         markup.add(types.InlineKeyboardButton('Техподдержка', url='https://t.me/vpnytSupport_bot'))
 
@@ -77,7 +78,7 @@ def trial(callback):
         if outline.user_key_info(user_key_id):
             key = outline.create_new_key(key_id=user_key_id, name=str(user_id(callback)))
 
-            text_message = (f"У вас есть 1 день пробного периода!\n\n```{key.access_url}```")
+            text_message = (f"У вас есть 3 дня пробного периода!\n\n```{key.access_url}```")
             bot.send_message(callback.message.chat.id, text_message,parse_mode='Markdown')
             print(user_id(callback),type(user_id(callback)))
             start_at_timer.start_timer_trial(user_id(callback))
@@ -123,7 +124,7 @@ def return_user_keys(callback):
         bot.send_message(callback.chat.id, 'Активных ключей нет!')
 
 # Обработчик callback'ов для тарифов
-@bot.callback_query_handler(func=lambda callback: callback.data in ['99', '1500', '2800'])
+@bot.callback_query_handler(func=lambda callback: callback.data in ['250', '2500'])
 def handle_paid_key(callback):
 
     bot.send_message(admin_id, f'Выбрал тариф +1 @{username(callback)}')
@@ -158,6 +159,12 @@ def check_payment_status(callback):
     first_name = callback.from_user.first_name
     last_name = callback.from_user.last_name
     
+    if handle_paid_key.price == '249':
+        subscription_period = '1'
+    elif handle_paid_key.price == '2500':
+        subscription_period = '365'
+
+
     # Проверка статуса оплаты (предполагается, что у вас есть метод для этого)
     payment_status = invoice_management.payment_verification(libel)
 
@@ -170,10 +177,10 @@ def check_payment_status(callback):
             database.update_purchased_key(user_id(callback),key.access_url)
             text_message = (f"Оплата подтверждена! Ваш ключ обновлен,вставте его в приложении Outline\n\n'Метка об оплате-{libel}\n\n```{key.access_url}```")
             bot.send_message(callback.message.chat.id, text_message,parse_mode='Markdown')
-            start_at_timer.start_timer(user_id(callback))
+            start_at_timer.start_timer(user_id(callback),subscription_period)
         else:    
             database.add_db(user_id(callback), first_name, last_name, key.access_url)
-            start_at_timer.start_timer(user_id(callback))
+            start_at_timer.start_timer(user_id(callback),subscription_period)
             text_message = (f"Оплата подтверждена! Ваш ключ активирован.\n'Метка об оплате-{libel}\n```{key.access_url}```")
             bot.send_message(callback.message.chat.id, text_message,parse_mode='Markdown')
         
