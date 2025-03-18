@@ -130,7 +130,7 @@ def return_user_keys(callback):
         bot.send_message(callback.chat.id, 'Активных ключей нет!')
 
 # Обработчик callback'ов для тарифов
-@bot.callback_query_handler(func=lambda callback: callback.data in ['290', '2900'])
+@bot.callback_query_handler(func=lambda callback: callback.data in ['290','145','2900'])
 def handle_paid_key(callback):
     handle_paid_key.price = callback.data
 
