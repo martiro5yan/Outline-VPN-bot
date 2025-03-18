@@ -171,3 +171,40 @@ def clear_purchased_key_by_id(tg_user_id):
         print(f"Ошибка при обновлении: {e}")
 
 
+
+def user_exists(tg_user_id: str) -> bool:
+    """Проверяет, есть ли пользователь в базе."""
+    con = sl.connect(db_path)
+    cur = con.cursor()
+
+    cur.execute("SELECT 1 FROM trial_users WHERE tg_user_id = ?", (tg_user_id,))
+    result = cur.fetchone()
+    con.close()
+
+    return result is not None  # Если запись найдена → True, иначе False
+
+def can_use_discount(tg_user_id: str) -> bool:
+    """Проверяет, может ли пользователь воспользоваться скидкой (is_paid = 0)."""
+    con = sl.connect(db_path)
+    cur = con.cursor()
+
+    cur.execute("SELECT is_paid FROM trial_users WHERE tg_user_id = ?", (tg_user_id,))
+    result = cur.fetchone()
+    con.close()
+
+    return result is not None and result[0] == 0  # Если is_paid = 0 → True, иначе False
+
+def update_trial_status(tg_user_id: str) -> bool:
+    """Обновляет статус оплаты (is_paid) с 0 на 1 для пользователя."""
+    con = sl.connect(db_path)
+    cur = con.cursor()
+
+    # Обновляем значение is_paid с 0 на 1
+    cur.execute("""
+        UPDATE trial_users
+        SET is_paid = 1
+        WHERE tg_user_id = ? AND is_paid = 0
+    """, (tg_user_id,))
+
+    con.commit()
+    con.close()

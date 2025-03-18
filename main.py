@@ -47,18 +47,24 @@ def user_data(data):
 # Обработка команды /start
 @bot.message_handler(commands=['start'])
 def start(message):
-
     bot.send_message(admin_id, f'START +1 @{username(message)}')
 
+    user_tg_id = message.chat.id
+    if database.user_exists(user_tg_id) and database.can_use_discount(user_tg_id):
+        price_month = '145'
+        start_message =  text.discount_month
+    else:
+        price_month = '290'
+        start_message =  text.start_message
     if invoice_management.check_token_validity():
         markup = types.InlineKeyboardMarkup()
         markup.add(types.InlineKeyboardButton('Попробовать бесплатно', callback_data='trial'))
-        markup.add(types.InlineKeyboardButton('Нидерланды: 1 месяц 290 ₽', callback_data='290'))
+        markup.add(types.InlineKeyboardButton(f'Нидерланды: 1 месяц {price_month} ₽', callback_data=price_month))
         markup.add(types.InlineKeyboardButton('Нидерланды: 1 год 2900 ₽', callback_data='2900'))
         markup.add(types.InlineKeyboardButton('Инструкция', callback_data='instruction'))
         markup.add(types.InlineKeyboardButton('Техподдержка', url='https://t.me/vpnytSupport_bot'))
 
-        bot.send_message(message.chat.id, text.start_message, reply_markup=markup)
+        bot.send_message(message.chat.id, start_message, reply_markup=markup)
     else:
         bot.send_message(message.chat.id, 'Сервис временно не доступен')
         bot.send_message(admin_id, 'Ошибка с токеном Yoomany')
@@ -176,7 +182,9 @@ def check_payment_status(callback):
     payment_status = invoice_management.payment_verification(libel)
 
     if payment_status:
-
+        if database.user_exists(user_id(callback)):
+            database.update_trial_status(user_id(callback))
+            
         bot.send_message(admin_id, f'Оплатил +1 @{username(callback)}')
         
         key = outline.create_new_key(key_id=user_key_id, name=str(user_id(callback)))
