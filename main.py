@@ -172,7 +172,7 @@ def check_payment_status(callback):
     first_name = callback.from_user.first_name
     last_name = callback.from_user.last_name
     
-    if handle_paid_key.price == '290':
+    if handle_paid_key.price == '290' or handle_paid_key.price == '145':
         subscription_period = '31'
     elif handle_paid_key.price == '2900':
         subscription_period = '365'
@@ -184,7 +184,7 @@ def check_payment_status(callback):
     if payment_status:
         if database.user_exists(user_id(callback)):
             database.update_trial_status(user_id(callback))
-            
+
         bot.send_message(admin_id, f'Оплатил +1 @{username(callback)}')
         
         key = outline.create_new_key(key_id=user_key_id, name=str(user_id(callback)))
