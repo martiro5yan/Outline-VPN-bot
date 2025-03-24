@@ -5,11 +5,11 @@ import os
 
 
 
-
+load_dotenv('config.env')
 api_url = os.getenv("API_URL")
 cert_sha256 = os.getenv('CERT_SHA256')
 
-client = OutlineVPN(api_url=api_url, cert_sha256=str(cert_sha256))
+client = OutlineVPN(api_url=api_url, cert_sha256=cert_sha256)
 
 
 def delete_key(key_id: str):

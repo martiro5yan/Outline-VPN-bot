@@ -5,6 +5,8 @@ import os
 
 import random_generator
 
+load_dotenv('config.env')
+
 YOOMANY_TOCEN = os.getenv('YOOMANY_TOCEN')
 
 client = Client(YOOMANY_TOCEN)
