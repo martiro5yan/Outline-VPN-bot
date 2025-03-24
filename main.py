@@ -11,8 +11,7 @@ import database
 import start_at_timer
 import txt_manager
 
-load_dotenv()
-
+load_dotenv('config.env')
 BOT_TOCEN = os.getenv('TELEGRAM_TOCEN')
 admin_id = os.getenv('TELEGRAM_ADMIN_ID')
 test_libel = os.getenv('TEST_LIBEL')
