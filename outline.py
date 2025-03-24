@@ -1,15 +1,15 @@
 from outline_vpn.outline_vpn import OutlineVPN
-import text
-import requests
-import time
+from dotenv import load_dotenv
+import os
 
 
-api_url = 'https://80.85.246.132:14296/e7HnqgKgosHDiOZyX0892g'
-cert_sha256 = 'BCC52A3156337F6AA6171DE7119E75C749B9DDB7CFAEFC35B1CC6A24078CF6A6'
+
+
+
+api_url = os.getenv("API_URL")
+cert_sha256 = os.getenv('CERT_SHA256')
 
 client = OutlineVPN(api_url=api_url, cert_sha256=cert_sha256)
-
-gb = 1073741824
 
 
 def delete_key(key_id: str):

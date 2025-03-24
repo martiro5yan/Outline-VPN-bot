@@ -1,6 +1,8 @@
 import telebot
 from telebot import types
 from datetime import datetime
+from dotenv import load_dotenv
+import os
 
 import outline
 import text
@@ -9,14 +11,13 @@ import database
 import start_at_timer
 import txt_manager
 
+load_dotenv()
 
-admin_id = 395838481
+BOT_TOCEN = os.getenv('TELEGRAM_TOCEN')
+admin_id = os.getenv('TELEGRAM_ADMIN_ID')
+test_libel = os.getenv('TEST_LIBEL')
 
-API_TOCEN = '7240622500:AAFL01ogk2InUs8ZFe077KicEO6URWHFpdk'
-#TECT
-#API_TOCEN = '7707295263:AAGW1vLJjvQngYxKOxLUMpH8fpBE2I_8Exc' 
-
-bot = telebot.TeleBot(API_TOCEN)
+bot = telebot.TeleBot(BOT_TOCEN)
 
 # Проверка типа входного объекта — является ли он callback'ом
 def is_callback(input_data):
@@ -47,7 +48,6 @@ def user_data(data):
 # Обработка команды /start
 @bot.message_handler(commands=['start'])
 def start(message):
-    bot.send_message(admin_id, f'START +1 @{username(message)}')
 
     user_tg_id = message.chat.id
     if database.user_exists(user_tg_id) and database.can_use_discount(user_tg_id):
@@ -56,6 +56,7 @@ def start(message):
     else:
         price_month = '290'
         start_message =  text.start_message
+
     if invoice_management.check_token_validity():
         markup = types.InlineKeyboardMarkup()
         markup.add(types.InlineKeyboardButton('Попробовать бесплатно', callback_data='trial'))
@@ -70,6 +71,8 @@ def start(message):
         bot.send_message(admin_id, 'Ошибка с токеном Yoomany')
         #Запись пользователей
         txt_manager.save_failed_ids(user_id(message))
+    
+    bot.send_message(admin_id, f'START +1 @{username(message)}')
 
 
 @bot.callback_query_handler(func=lambda callback: callback.data == 'trial')
@@ -77,8 +80,6 @@ def trial(callback):
     if database.is_user_in_db_trial(callback.message.chat.id):
         bot.send_message(callback.message.chat.id, 'Вы уже использовали пробный период!')
     else:
-        
-        bot.send_message(admin_id, f'Активировал пробный период +1 @{username(callback)}')
         database.add_user_to_trial(callback.message.chat.id)
         user_key_id = f'{user_id(callback)}'
         if outline.user_key_info(user_key_id):
@@ -91,23 +92,22 @@ def trial(callback):
         else:
             bot.send_message(callback.message.chat.id,f'У вас уже имеется ключ, проверка /mykeys')
 
+        bot.send_message(admin_id, f'Активировал пробный период +1 @{username(callback)}')
+
 # Обработчик команды /manual
 @bot.message_handler(commands=['manual'])
 def manual_links(user):
-    bot.send_message(admin_id, f'MANUAL +1 @{username(user)}')
     bot.send_message(user.chat.id, text.instruction_text, parse_mode='Markdown')
+    bot.send_message(admin_id, f'MANUAL +1 @{username(user)}')
 
 # Обработчик для кнопки "Инструкция"
 @bot.callback_query_handler(func=lambda callback: callback.data == 'instruction')
 def send_help(callback):
-    bot.send_message(admin_id, f'INSTRU +1 @{username(callback)}')
     bot.send_message(callback.message.chat.id, text.instruction_text, parse_mode='Markdown')
+    bot.send_message(admin_id, f'INSTRU +1 @{username(callback)}')
 
 @bot.message_handler(commands=['mykeys'])
 def return_user_keys(callback):
-    
-    bot.send_message(admin_id, f'MYKEYS +1 @{username(callback)}')
-
     id = user_id(callback)
     
     user = database.get_last_subscription(str(id))
@@ -128,16 +128,12 @@ def return_user_keys(callback):
         bot.send_message(callback.chat.id, response_message, parse_mode='Markdown')
     else:
         bot.send_message(callback.chat.id, 'Активных ключей нет!')
+    bot.send_message(admin_id, f'MYKEYS +1 @{username(callback)}')
 
 # Обработчик callback'ов для тарифов
 @bot.callback_query_handler(func=lambda callback: callback.data in ['290','145','2900'])
 def handle_paid_key(callback):
     handle_paid_key.price = callback.data
-
-    bot.send_message(admin_id, f'Выбрал тариф {handle_paid_key.price} @{username(callback)}')
-
-    
-
     user_key_id = f'{user_id(callback)}'
 
     # Создание ссылки на оплату
@@ -151,19 +147,17 @@ def handle_paid_key(callback):
         msg = bot.send_message(callback.message.chat.id, f'Сумма оплаты: {handle_paid_key.price} рублей\n1 - Оплатить\n2 - Нажать проверить оплату', reply_markup=markup)
     else:
         bot.send_message(callback.message.chat.id,f'У вас уже имеется ключ, проверка /mykeys')
-    # Отправка сообщения с суммой и кнопками
+    bot.send_message(admin_id, f'Выбрал тариф {handle_paid_key.price} @{username(callback)}')
 
 # Обработчик для проверки статуса оплаты
 @bot.callback_query_handler(func=lambda callback: callback.data.startswith('check_payment_'))
 def check_payment_status(callback):
     user_key_id = f'{user_id(callback)}'
 
-    bot.send_message(admin_id, f'Проверил оплату +1 @{username(callback)}')
-
     libel = callback.data.split('_')[2]  # Извлекаем метку
     test_libel = 'L8cD7cJhpM'
     
-    if user_key_id == '395838481' or user_key_id == '441164668':
+    if user_key_id == str(admin_id):
         libel = 'L8cD7cJhpM'#TEST
     else:
         libel = callback.data.split('_')[2]
@@ -180,7 +174,7 @@ def check_payment_status(callback):
 
     # Проверка статуса оплаты (предполагается, что у вас есть метод для этого)
     payment_status = invoice_management.payment_verification(libel)
-
+    bot.send_message(admin_id, f'Проверил оплату +1 @{username(callback)}')
     if payment_status:
         if database.user_exists(user_id(callback)):
             database.update_trial_status(user_id(callback))

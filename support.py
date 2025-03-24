@@ -1,8 +1,10 @@
 import telebot
 import time
+from dotenv import load_dotenv
+import os
 
-TOKEN = "7510972914:AAFZtjTayAhd7UonImhAiGoijfvMoIA9zUE"
-SUPPORT_CHAT_ID = -4730642471  # ID чата поддержки
+TOKEN = os.getenv('TELEGRAM_SUPPORT_TOCEN')
+SUPPORT_CHAT_ID = os.getenv('SUPPORT_CHAT_ID')  # ID чата поддержки
 
 bot = telebot.TeleBot(TOKEN)
 
