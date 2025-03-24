@@ -155,10 +155,9 @@ def check_payment_status(callback):
     user_key_id = f'{user_id(callback)}'
 
     libel = callback.data.split('_')[2]  # Извлекаем метку
-    test_libel = 'L8cD7cJhpM'
     
     if user_key_id == str(admin_id):
-        libel = 'L8cD7cJhpM'#TEST
+        libel = test_libel
     else:
         libel = callback.data.split('_')[2]
 

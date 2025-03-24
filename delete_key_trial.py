@@ -1,14 +1,14 @@
 import requests
 import sys
 import outline
-
+import main
 
 
 print('удаление ключа')
 
 user_id = sys.argv[1]
 
-API_TOCEN = '7240622500:AAFL01ogk2InUs8ZFe077KicEO6URWHFpdk'
+API_TOCEN = main.BOT_TOCEN
 message = "Ваш пробный период завершен, ключ удален. Однако у вас есть 50% скидка на первый месяц использования\n /start для обновления цены"
 
 url = f'https://api.telegram.org/bot{API_TOCEN}/sendMessage'

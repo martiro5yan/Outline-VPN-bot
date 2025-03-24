@@ -2,13 +2,15 @@ import requests
 import sys
 import outline
 import database
+import main
+
 
 
 
 
 user_id = sys.argv[1]
 
-API_TOCEN = '7240622500:AAFL01ogk2InUs8ZFe077KicEO6URWHFpdk'
+API_TOCEN = main.BOT_TOCEN
 message = "Ваша подписка окончена, ключ удален!"
 
 url = f'https://api.telegram.org/bot{API_TOCEN}/sendMessage'
