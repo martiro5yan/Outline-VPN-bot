@@ -41,9 +41,9 @@ def forward_to_support(message):
     edited_text = f"📩 Новая заявка в поддержку\n👤 Пользователь: {first_name} {last_name}\n({username})\n🆔 *ID:* {user_id}\n💬 Сообщение:\n{message.text}"
 
     try:
-        # Отправляем сообщение в поддержку и сохраняем его ID
+        # Отправляем сообщение в поддержку и сохраняем ID пользователя
         sent_message = bot.send_message(SUPPORT_CHAT_ID, edited_text)
-        pending_requests[sent_message.message_id] = user_id
+        pending_requests[sent_message.message_id] = user_id  # Сохраняем user_id, а не message_id
 
         bot.send_message(message.chat.id, "✅ Ваша заявка отправлена в техподдержку.")
     except Exception as e:
@@ -54,7 +54,7 @@ def forward_to_support(message):
 def reply_to_user(message):
     """Позволяет техподдержке отвечать пользователю."""
     support_msg_id = message.reply_to_message.message_id  # ID сообщения, на которое ответила поддержка
-    user_id = pending_requests.get(support_msg_id)  # Получаем ID пользователя
+    user_id = pending_requests.get(support_msg_id)  # Получаем ID пользователя, отправившего заявку
 
     if user_id:
         try:
