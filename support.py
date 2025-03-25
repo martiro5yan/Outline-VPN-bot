@@ -5,9 +5,9 @@ import os
 
 load_dotenv('config.env')
 
-TOKEN = os.getenv('TELEGRAM_SUPPORT_TOKEN')  # Исправлено название переменной
+TELEGRAM_SUPPORT_TOCEN = os.getenv('TELEGRAM_SUPPORT_TOCEN')  # Исправлено название переменной
 SUPPORT_CHAT_ID = os.getenv('SUPPORT_CHAT_ID')  # ID чата поддержки
-bot = telebot.TeleBot(TOKEN)
+bot = telebot.TeleBot(TELEGRAM_SUPPORT_TOCEN)
 
 # Словарь для хранения заявок (message_id в чате поддержки -> user_id)
 pending_requests = {}
