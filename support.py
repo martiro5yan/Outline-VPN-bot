@@ -10,7 +10,7 @@ load_dotenv('config.env')
 # Токен Telegram бота и ID чата поддержки
 TOKEN = os.getenv('TELEGRAM_SUPPORT_TOCEN')
 SUPPORT_CHAT_ID = os.getenv('SUPPORT_CHAT_ID')
-
+print(SUPPORT_CHAT_ID)
 bot = telebot.TeleBot(TOKEN)
 
 # Словарь для хранения заявок (message_id в чате поддержки -> user_id)
@@ -34,7 +34,7 @@ def forward_to_support(message):
 
     # Отправляем сообщение в поддержку и сохраняем его ID
     sent_message = bot.send_message(SUPPORT_CHAT_ID, edited_text)
-    pending_requests[sent_message.message_id] = message.chat.id
+    pending_requests[sent_message.message_id] = user_id  # Сохраняем связь message_id -> user_id
 
     bot.send_message(message.chat.id, "✅ Ваша заявка отправлена в техподдержку.")
 
