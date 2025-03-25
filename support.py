@@ -8,77 +8,46 @@ from threading import Lock
 load_dotenv('config.env')
 
 # Токен Telegram бота и ID чата поддержки
-TELEGRAM_SUPPORT_TOKEN = os.getenv('TELEGRAM_SUPPORT_TOKEN')
+TOKEN = os.getenv('TELEGRAM_SUPPORT_TOCEN')
 SUPPORT_CHAT_ID = os.getenv('SUPPORT_CHAT_ID')
 
-# Создаем объект бота
-bot = telebot.TeleBot(TELEGRAM_SUPPORT_TOKEN)
+bot = telebot.TeleBot(TOKEN)
 
-# Храним время последней заявки и блокировку для многозадачности
-last_request_time = 0
-request_lock = Lock()
+# Словарь для хранения заявок (message_id в чате поддержки -> user_id)
+pending_requests = {}
 
-# Словарь для хранения связи между пользователями и их заявками
-user_requests = {}
+@bot.message_handler(commands=['start'])
+def start(message):
+    bot.send_message(message.chat.id, "Привет! Опишите вашу проблему, и мы постараемся помочь.")
 
-# Функция для обработки всех входящих сообщений
-@bot.message_handler(func=lambda message: True)
-def handle_message(message):
-    global last_request_time
-    
-    current_time = time.time()
+@bot.message_handler(func=lambda message: message.chat.id != SUPPORT_CHAT_ID)
+def forward_to_support(message):
+    """Редактирует сообщение и отправляет его в чат поддержки."""
+    first_name = message.from_user.first_name or "Неизвестно"
+    last_name = message.from_user.last_name or ""
+    user_id = message.from_user.id
+    username = f"@{message.from_user.username}" if message.from_user.username else "Нет username"
 
-    # Проверяем, прошло ли хотя бы 45 секунд с последней заявки
-    with request_lock:
-        if current_time - last_request_time >= 45:
-            last_request_time = current_time
+    # Формируем отредактированное сообщение
+    edited_text = (f"📩 Новая заявка в поддержку\n👤 Пользователь: {first_name} {last_name} ({username})\n🆔 ID: `{user_id}`\n💬 Сообщение:\n_{message.text}_"
+    )
 
-            # Сохраняем ID пользователя и текст заявки для дальнейшего использования
-            user_requests[message.from_user.id] = {
-                'user_id': message.from_user.id,
-                'first_name': message.from_user.first_name,
-                'last_name': message.from_user.last_name,
-                'message': message.text,
-                'time': current_time
-            }
+    # Отправляем сообщение в поддержку и сохраняем его ID
+    sent_message = bot.send_message(SUPPORT_CHAT_ID, edited_text)
+    pending_requests[sent_message.message_id] = message.chat.id
 
-            # Пересылаем заявку в чат поддержки
-            bot.send_message(SUPPORT_CHAT_ID, f"Новая заявка от {message.from_user.first_name} ({message.from_user.id}):\n\n{message.text}")
+    bot.send_message(message.chat.id, "✅ Ваша заявка отправлена в техподдержку.")
 
-            # Подтверждаем пользователю, что его заявка отправлена в поддержку
-            bot.send_message(message.chat.id, "Ваша заявка отправлена в чат поддержки. Ответим вам как можно скорее.")
-        else:
-            bot.send_message(message.chat.id, "Пожалуйста, подождите минимум 45 секунд перед отправкой следующей заявки.")
+@bot.message_handler(func=lambda message: message.chat.id == SUPPORT_CHAT_ID and message.reply_to_message)
+def reply_to_user(message):
+    """Позволяет техподдержке отвечать пользователю."""
+    support_msg_id = message.reply_to_message.message_id  # ID сообщения, на которое ответила поддержка
+    user_id = pending_requests.get(support_msg_id)  # Получаем ID пользователя
 
-# Функция для обработки сообщений от поддержки
-@bot.message_handler(func=lambda message: message.chat.id == SUPPORT_CHAT_ID)
-def handle_support_reply(message):
-    # Проверяем, содержит ли сообщение информацию о пользователе
-    if message.text.startswith("Ответ пользователю:"):
-        user_id = extract_user_id_from_message(message.text)
-
-        if user_id in user_requests:
-            user_message = user_requests[user_id]
-            
-            # Отправляем ответ пользователю
-            bot.send_message(user_message['user_id'], f"Ответ от поддержки: {message.text[18:]}")
-            bot.send_message(SUPPORT_CHAT_ID, f"Ответ отправлен пользователю {user_message['first_name']} ({user_message['user_id']})")
-        else:
-            bot.send_message(SUPPORT_CHAT_ID, "Не удалось найти пользователя для ответа.")
+    if user_id:
+        bot.send_message(user_id, f"📩 *Ответ от техподдержки:*\n{message.text}", parse_mode="Markdown")
+        bot.send_message(message.chat.id, "✅ Ответ отправлен пользователю.")
     else:
-        bot.send_message(SUPPORT_CHAT_ID, "Пожалуйста, укажите формат ответа с информацией о пользователе.")
+        bot.send_message(message.chat.id, "⚠ Ошибка: Не найдено исходное сообщение.")
 
-# Функция для извлечения user_id из сообщения поддержки
-def extract_user_id_from_message(text):
-    """
-    Извлекаем user_id из текста ответа, который должен быть в формате:
-    'Ответ пользователю: [user_id] текст ответа'
-    """
-    try:
-        user_id_str = text.split("Ответ пользователю: ")[1].split()[0]
-        return int(user_id_str)
-    except (IndexError, ValueError):
-        return None
-
-# Запуск бота
 bot.polling(none_stop=True)
