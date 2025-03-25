@@ -200,10 +200,4 @@ def check_payment_status(callback):
 
 
 
-WEBHOOK_URL = "https://109.73.196.23:8443"
-
-# Удаляем старый Webhook, если был
-bot.remove_webhook()
-bot.set_webhook(url=f"{WEBHOOK_URL}/{BOT_TOCEN}")
-
-print(f"✅ Webhook установлен: {WEBHOOK_URL}/{BOT_TOCEN}")
+bot.polling(non_stop=True)
