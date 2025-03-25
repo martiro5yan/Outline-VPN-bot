@@ -31,7 +31,12 @@ HOST = "0.0.0.0"  # Принимает соединения со всех IP
 PORT = 8443       # Порт Webhook
 
 httpd = http.server.HTTPServer((HOST, PORT), WebhookHandler)
-httpd.socket = ssl.wrap_socket(httpd.socket, certfile="webhook.pem", keyfile="webhook.key", server_side=True)
+# Создание SSL контекста
+context = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH)
+context.load_cert_chain(certfile="webhook.pem", keyfile="webhook.key")
+
+# Обернуть сокет в SSL
+httpd.socket = context.wrap_socket(httpd.socket, server_side=True)
 
 print(f"🔹 Webhook-сервер запущен на {HOST}:{PORT} (HTTPS)")
 httpd.serve_forever()
