@@ -4,7 +4,8 @@ from dotenv import load_dotenv
 import os
 
 load_dotenv('config.env')
-TOKEN = os.getenv('TELEGRAM_SUPPORT_TOCEN')
+
+TOKEN = os.getenv('TELEGRAM_SUPPORT_TOKEN')  # Исправлено название переменной
 SUPPORT_CHAT_ID = os.getenv('SUPPORT_CHAT_ID')  # ID чата поддержки
 bot = telebot.TeleBot(TOKEN)
 
@@ -39,11 +40,15 @@ def forward_to_support(message):
     # Формируем отредактированное сообщение
     edited_text = f"📩 Новая заявка в поддержку\n👤 Пользователь: {first_name} {last_name}\n({username})\n🆔 *ID:* {user_id}\n💬 Сообщение:\n{message.text}"
 
-    # Отправляем сообщение в поддержку и сохраняем его ID
-    sent_message = bot.send_message(SUPPORT_CHAT_ID, edited_text)
-    pending_requests[sent_message.message_id] = message.chat.id
+    try:
+        # Отправляем сообщение в поддержку и сохраняем его ID
+        sent_message = bot.send_message(SUPPORT_CHAT_ID, edited_text)
+        pending_requests[sent_message.message_id] = user_id
 
-    bot.send_message(message.chat.id, "✅ Ваша заявка отправлена в техподдержку.")
+        bot.send_message(message.chat.id, "✅ Ваша заявка отправлена в техподдержку.")
+    except Exception as e:
+        bot.send_message(message.chat.id, "❌ Произошла ошибка при отправке вашей заявки.")
+        print(f"Ошибка при отправке сообщения в поддержку: {e}")
 
 @bot.message_handler(func=lambda message: message.chat.id == SUPPORT_CHAT_ID and message.reply_to_message)
 def reply_to_user(message):
@@ -52,8 +57,12 @@ def reply_to_user(message):
     user_id = pending_requests.get(support_msg_id)  # Получаем ID пользователя
 
     if user_id:
-        bot.send_message(user_id, f"📩 *Ответ от техподдержки:*\n{message.text}", parse_mode="Markdown")
-        bot.send_message(message.chat.id, "✅ Ответ отправлен пользователю.")
+        try:
+            bot.send_message(user_id, f"📩 *Ответ от техподдержки:*\n{message.text}", parse_mode="Markdown")
+            bot.send_message(message.chat.id, "✅ Ответ отправлен пользователю.")
+        except Exception as e:
+            bot.send_message(message.chat.id, "❌ Ошибка при отправке ответа пользователю.")
+            print(f"Ошибка при отправке ответа пользователю: {e}")
     else:
         bot.send_message(message.chat.id, "⚠ Ошибка: Не найдено исходное сообщение.")
 
