@@ -1,17 +1,22 @@
 import requests
 import sys
 import outline
-import main
 
+from dotenv import load_dotenv
+import os
+
+
+
+load_dotenv('config.env')
+BOT_TOCEN = os.getenv('TELEGRAM_TOCEN')
 
 print('удаление ключа')
 
 user_id = sys.argv[1]
 
-API_TOCEN = main.BOT_TOCEN
 message = "Ваш пробный период завершен, ключ удален. Однако у вас есть 50% скидка на первый месяц использования\n /start для обновления цены"
 
-url = f'https://api.telegram.org/bot{API_TOCEN}/sendMessage'
+url = f'https://api.telegram.org/bot{BOT_TOCEN}/sendMessage'
 
 payload = {
     'chat_id': user_id,
