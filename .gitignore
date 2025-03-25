@@ -1,2 +1,4 @@
 *.env
+webhook.key
+webhook.pem
 createTocen.py
