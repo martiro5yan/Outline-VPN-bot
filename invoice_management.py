@@ -7,9 +7,9 @@ import random_generator
 
 load_dotenv('config.env')
 
-YOOMANY_TOCEN = os.getenv('YOOMANY_TOCEN')
+YOOMANY_TOKEN = os.getenv('YOOMANY_TOKEN')
 
-client = Client(YOOMANY_TOCEN)
+client = Client(YOOMANY_TOKEN)
 
 
 def check_token_validity():

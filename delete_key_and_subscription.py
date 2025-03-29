@@ -8,13 +8,13 @@ import os
 
 
 load_dotenv('config.env')
-BOT_TOCEN = os.getenv('TELEGRAM_TOCEN')
+BOT_TOKEN = os.getenv('TELEGRAM_TOKEN')
 
 user_id = sys.argv[1]
 
 message = "Ваша подписка окончена, ключ удален!"
 
-url = f'https://api.telegram.org/bot{BOT_TOCEN}/sendMessage'
+url = f'https://api.telegram.org/bot{BOT_TOKEN}/sendMessage'
 
 payload = {
     'chat_id': user_id,

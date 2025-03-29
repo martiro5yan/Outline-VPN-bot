@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 # Загружаем переменные окружения
 load_dotenv('config.env')
 
-TOKEN = os.getenv('TELEGRAM_SUPPORT_TOCEN')
+TOKEN = os.getenv('TELEGRAM_SUPPORT_TOKEN')
 SUPPORT_CHAT_ID = int(os.getenv('SUPPORT_CHAT_ID'))  # Убедитесь, что это int
 bot = telebot.TeleBot(TOKEN)
 

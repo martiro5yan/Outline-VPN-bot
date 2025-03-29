@@ -12,11 +12,11 @@ import start_at_timer
 import txt_manager
 
 load_dotenv('config.env')
-BOT_TOCEN = os.getenv('TELEGRAM_TOCEN')
+BOT_TOKEN = os.getenv('TELEGRAM_TOKEN')
 admin_id = os.getenv('TELEGRAM_ADMIN_ID')
 test_libel = os.getenv('TEST_LIBEL')
 
-bot = telebot.TeleBot(BOT_TOCEN)
+bot = telebot.TeleBot(BOT_TOKEN)
 
 # Проверка типа входного объекта — является ли он callback'ом
 def is_callback(input_data):
@@ -59,6 +59,7 @@ def start(message):
     if invoice_management.check_token_validity():
         markup = types.InlineKeyboardMarkup()
         markup.add(types.InlineKeyboardButton('Попробовать бесплатно', callback_data='trial'))
+        markup.add(types.InlineKeyboardButton('Нидерланды: 1 день', callback_data='55'))
         markup.add(types.InlineKeyboardButton(f'Нидерланды: 1 месяц {price_month} ₽', callback_data=price_month))
         markup.add(types.InlineKeyboardButton('Нидерланды: 1 год 2900 ₽', callback_data='2900'))
         markup.add(types.InlineKeyboardButton('Инструкция', callback_data='instruction'))
@@ -130,7 +131,7 @@ def return_user_keys(callback):
     bot.send_message(admin_id, f'MYKEYS +1 @{username(callback)}')
 
 # Обработчик callback'ов для тарифов
-@bot.callback_query_handler(func=lambda callback: callback.data in ['290','145','2900'])
+@bot.callback_query_handler(func=lambda callback: callback.data in ['55','145','290','2900'])
 def handle_paid_key(callback):
     handle_paid_key.price = callback.data
     user_key_id = f'{user_id(callback)}'
@@ -168,6 +169,8 @@ def check_payment_status(callback):
         subscription_period = '31'
     elif handle_paid_key.price == '2900':
         subscription_period = '365'
+    elif handle_paid_key.price == '55':
+        subscription_period = '1'
 
 
     # Проверка статуса оплаты (предполагается, что у вас есть метод для этого)
