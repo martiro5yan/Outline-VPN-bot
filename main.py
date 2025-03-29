@@ -59,7 +59,7 @@ def start(message):
     if invoice_management.check_token_validity():
         markup = types.InlineKeyboardMarkup()
         markup.add(types.InlineKeyboardButton('Попробовать бесплатно', callback_data='trial'))
-        markup.add(types.InlineKeyboardButton('Нидерланды: 1 день', callback_data='55'))
+        markup.add(types.InlineKeyboardButton('Нидерланды: 1 день 55 ₽', callback_data='55'))
         markup.add(types.InlineKeyboardButton(f'Нидерланды: 1 месяц {price_month} ₽', callback_data=price_month))
         markup.add(types.InlineKeyboardButton('Нидерланды: 1 год 2900 ₽', callback_data='2900'))
         markup.add(types.InlineKeyboardButton('Инструкция', callback_data='instruction'))
