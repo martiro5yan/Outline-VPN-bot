@@ -24,8 +24,10 @@ payload = {
 response = requests.post(url, data=payload)
     # Проверка успешности запроса
 if response.status_code == 200:
-    print("Сообщение отправлено!")
+    print(f"Сообщение {user_id} отправлено!")
     outline.delete_key(user_id)
     database.clear_purchased_key_by_id(user_id)
 else:
     print(f"Ошибка: {response.status_code}, {response.text}")
+    outline.delete_key(user_id)
+    database.clear_purchased_key_by_id(user_id)

@@ -72,7 +72,7 @@ def start(message):
         #Запись пользователей
         txt_manager.save_failed_ids(user_id(message))
     
-    bot.send_message(admin_id, f'START +1 @{username(message)}')
+    bot.send_message(admin_id, f'START +1 @{username(message)} {message.chat.id}')
 
 
 @bot.callback_query_handler(func=lambda callback: callback.data == 'trial')
@@ -92,19 +92,17 @@ def trial(callback):
         else:
             bot.send_message(callback.message.chat.id,f'У вас уже имеется ключ, проверка /mykeys')
 
-        bot.send_message(admin_id, f'Активировал пробный период +1 @{username(callback)}')
+        bot.send_message(admin_id, f'Активировал пробный период +1 @{username(callback)} {user_id(callback)}')
 
 # Обработчик команды /manual
 @bot.message_handler(commands=['manual'])
 def manual_links(user):
     bot.send_message(user.chat.id, text.instruction_text, parse_mode='Markdown')
-    bot.send_message(admin_id, f'MANUAL +1 @{username(user)}')
 
 # Обработчик для кнопки "Инструкция"
 @bot.callback_query_handler(func=lambda callback: callback.data == 'instruction')
 def send_help(callback):
     bot.send_message(callback.message.chat.id, text.instruction_text, parse_mode='Markdown')
-    bot.send_message(admin_id, f'INSTRU +1 @{username(callback)}')
 
 @bot.message_handler(commands=['mykeys'])
 def return_user_keys(callback):
@@ -128,7 +126,6 @@ def return_user_keys(callback):
         bot.send_message(callback.chat.id, response_message, parse_mode='Markdown')
     else:
         bot.send_message(callback.chat.id, 'Активных ключей нет!')
-    bot.send_message(admin_id, f'MYKEYS +1 @{username(callback)}')
 
 # Обработчик callback'ов для тарифов
 @bot.callback_query_handler(func=lambda callback: callback.data in ['55','145','290','2900'])
@@ -180,7 +177,7 @@ def check_payment_status(callback):
         if database.user_exists(user_id(callback)):
             database.update_trial_status(user_id(callback))
 
-        bot.send_message(admin_id, f'Оплатил +1 @{username(callback)}')
+        bot.send_message(admin_id, f'Оплатил +1 @{username(callback)} {user_key_id}')
         
         key = outline.create_new_key(key_id=user_key_id, name=str(user_id(callback)))
         if database.is_user_in_db(user_id(callback)):
