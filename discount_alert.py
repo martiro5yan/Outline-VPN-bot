@@ -17,7 +17,7 @@ def list_users():
 
 # Загружаем переменные окружения из файла .env
 load_dotenv('config.env')
-BOT_TOKEN = os.getenv('TELEGRAM_TOCEN')
+BOT_TOKEN = os.getenv('TELEGRAM_TOKEN')
 
 # Сообщение, которое нужно отправить
 message = text.discount_month
