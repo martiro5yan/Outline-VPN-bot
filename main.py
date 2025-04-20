@@ -51,9 +51,11 @@ def start(message):
     user_tg_id = message.chat.id
     if database.user_exists(user_tg_id) and database.can_use_discount(user_tg_id):
         price_month = '145'
+        price_year = '2300'
         start_message =  text.discount_month
     else:
         price_month = '290'
+        price_year = '2900'
         start_message =  text.start_message
 
     if invoice_management.check_token_validity():
@@ -61,7 +63,7 @@ def start(message):
         markup.add(types.InlineKeyboardButton('Попробовать бесплатно', callback_data='trial'))
         markup.add(types.InlineKeyboardButton('Нидерланды: 1 день 55 ₽', callback_data='55'))
         markup.add(types.InlineKeyboardButton(f'Нидерланды: 1 месяц {price_month} ₽', callback_data=price_month))
-        markup.add(types.InlineKeyboardButton('Нидерланды: 1 год 2900 ₽', callback_data='2900'))
+        markup.add(types.InlineKeyboardButton(f'Нидерланды: 1 год {price_year} ₽', callback_data=price_year))
         markup.add(types.InlineKeyboardButton('Инструкция', callback_data='instruction'))
         markup.add(types.InlineKeyboardButton('Техподдержка', url='https://t.me/vpnytSupport_bot'))
 
