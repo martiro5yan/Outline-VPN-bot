@@ -20,7 +20,7 @@ load_dotenv('config.env')
 BOT_TOKEN = os.getenv('TELEGRAM_TOKEN')
 
 # Сообщение, которое нужно отправить
-message = text.discount_month
+message = text.holiday_text
 
 # URL для отправки сообщений через Telegram Bot API
 url = f'https://api.telegram.org/bot{BOT_TOKEN}/sendMessage'
@@ -35,11 +35,17 @@ for user_id in tg_users_id:
         'text': message
     }
 
-    # Отправляем запрос к Telegram API
-    response = requests.post(url, data=payload)
-
-    # Проверка успешности запроса
-    if response.status_code == 200:
+    try:
+        response = requests.post(url, data=payload)
+        response.raise_for_status()  # выброс исключения при ошибке HTTP
         print(f"Сообщение отправлено пользователю {user_id}!")
-    else:
-        print(f"Ошибка при отправке сообщения пользователю {user_id}: {response.status_code}, {response.text}")
+    except requests.exceptions.HTTPError as http_err:
+        print(f"HTTP ошибка для пользователя {user_id}: {http_err}")
+    except requests.exceptions.ConnectionError as conn_err:
+        print(f"Ошибка соединения для пользователя {user_id}: {conn_err}")
+    except requests.exceptions.Timeout as timeout_err:
+        print(f"Тайм-аут при отправке пользователю {user_id}: {timeout_err}")
+    except requests.exceptions.RequestException as req_err:
+        print(f"Ошибка запроса для пользователя {user_id}: {req_err}")
+    except Exception as e:
+        print(f"Непредвиденная ошибка для пользователя {user_id}: {e}")
