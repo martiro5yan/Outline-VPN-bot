@@ -47,12 +47,19 @@ def user_data(data):
 # Обработка команды /start
 @bot.message_handler(commands=['start'])
 def start(message):
+    today = datetime.now().date()
 
     user_tg_id = message.chat.id
     if database.user_exists(user_tg_id) and database.can_use_discount(user_tg_id):
         price_month = '145'
-        price_year = '2300'
-        start_message =  text.discount_month
+        if today.day in [1, 2, 3] and today.month == 5:
+            start_message = text.holiday_text
+            price_year = '2300'
+        elif today.day == 9 and today.month == 5:
+            start_message =  text.day_v
+            price_year = '2300'
+        else:
+            price_year = '2900'
     else:
         price_month = '290'
         price_year = '2900'
@@ -63,7 +70,7 @@ def start(message):
         markup.add(types.InlineKeyboardButton('Попробовать бесплатно', callback_data='trial'))
         markup.add(types.InlineKeyboardButton('Нидерланды: 1 день 55 ₽', callback_data='55'))
         markup.add(types.InlineKeyboardButton(f'Нидерланды: 1 месяц {price_month} ₽', callback_data=price_month))
-        markup.add(types.InlineKeyboardButton(f'Нидерланды: 1 год {price_year} ₽', callback_data=price_year))
+        markup.add(types.InlineKeyboardButton(f'Нидерланды: 1 год за {price_year} ₽ вместо 3480 ₽', callback_data=price_year))
         markup.add(types.InlineKeyboardButton('Инструкция', callback_data='instruction'))
         markup.add(types.InlineKeyboardButton('Техподдержка', url='https://t.me/vpnytSupport_bot'))
 

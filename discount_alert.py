@@ -4,6 +4,7 @@ import sqlite3 as sl
 import database
 from dotenv import load_dotenv
 import os
+from datetime import datetime
 
 def list_users():
     con = sl.connect(database.db_path)
@@ -18,9 +19,14 @@ def list_users():
 # Загружаем переменные окружения из файла .env
 load_dotenv('config.env')
 BOT_TOKEN = os.getenv('TELEGRAM_TOKEN')
-
+today = datetime.now().date()
 # Сообщение, которое нужно отправить
-message = text.holiday_text
+if today.day in [1, 2, 3] and today.month == 5:
+    message = text.holiday_text
+elif today.day == 9 and today.month == 5:
+    message =  text.day_v
+else:
+    message = text.discount_month
 
 # URL для отправки сообщений через Telegram Bot API
 url = f'https://api.telegram.org/bot{BOT_TOKEN}/sendMessage'
