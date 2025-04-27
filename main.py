@@ -60,6 +60,7 @@ def start(message):
             price_year = '2300'
         else:
             price_year = '2900'
+            start_message = text.discount_month
     else:
         price_month = '290'
         price_year = '2900'
