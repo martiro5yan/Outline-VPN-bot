@@ -163,13 +163,17 @@ def check_payment_status(callback):
 
     first_name = callback.from_user.first_name
     last_name = callback.from_user.last_name
-    
-    if handle_paid_key.price == '290' or handle_paid_key.price == '145':
-        subscription_period = '31'
-    elif handle_paid_key.price == '2900':
-        subscription_period = '365'
-    elif handle_paid_key.price == '55':
+    # Переписать этот стыд
+    if handle_paid_key.price == '247' or handle_paid_key.price == '123':
+        subscription_period = '30'
+    elif handle_paid_key.price == '20':
         subscription_period = '1'
+    elif handle_paid_key.price == '699':
+        subscription_period = '90'
+    elif handle_paid_key.price == '1349':
+        subscription_period = '180'
+    elif handle_paid_key.price == '2300':
+        subscription_period = '365'
 
 
     # Проверка статуса оплаты (предполагается, что у вас есть метод для этого)
