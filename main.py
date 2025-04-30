@@ -47,31 +47,23 @@ def user_data(data):
 # Обработка команды /start
 @bot.message_handler(commands=['start'])
 def start(message):
-    today = datetime.now().date()
 
     user_tg_id = message.chat.id
     if database.user_exists(user_tg_id) and database.can_use_discount(user_tg_id):
-        price_month = '145'
-        if today.day in [1, 2, 3] and today.month == 5:
-            start_message = text.holiday_text
-            price_year = '2300'
-        elif today.day == 9 and today.month == 5:
-            start_message =  text.day_v
-            price_year = '2300'
-        else:
-            price_year = '2900'
-            start_message = text.discount_month
+        price_month = '123'
+        start_message = text.discount_month
     else:
-        price_month = '290'
-        price_year = '2900'
+        price_month = '247'
         start_message =  text.start_message
 
     if invoice_management.check_token_validity():
         markup = types.InlineKeyboardMarkup()
         markup.add(types.InlineKeyboardButton('Попробовать бесплатно', callback_data='trial'))
-        markup.add(types.InlineKeyboardButton('Нидерланды: 1 день 55 ₽', callback_data='55'))
-        markup.add(types.InlineKeyboardButton(f'Нидерланды: 1 месяц {price_month} ₽', callback_data=price_month))
-        markup.add(types.InlineKeyboardButton(f'Нидерланды: 1 год за {price_year} ₽ вместо 3480 ₽', callback_data=price_year))
+        markup.add(types.InlineKeyboardButton('1 день 20 ₽', callback_data='20'))
+        markup.add(types.InlineKeyboardButton(f'1 месяц {price_month} ₽', callback_data=price_month))
+        markup.add(types.InlineKeyboardButton(f'3 месяца 699 ₽', callback_data='699'))
+        markup.add(types.InlineKeyboardButton(f'6 месяцев 1349 ₽', callback_data='1349'))
+        markup.add(types.InlineKeyboardButton(f'12 месяцев 2300 ₽', callback_data='2300'))
         markup.add(types.InlineKeyboardButton('Инструкция', callback_data='instruction'))
         markup.add(types.InlineKeyboardButton('Техподдержка', url='https://t.me/vpnytSupport_bot'))
 
@@ -138,7 +130,7 @@ def return_user_keys(callback):
         bot.send_message(callback.chat.id, 'Активных ключей нет!')
 
 # Обработчик callback'ов для тарифов
-@bot.callback_query_handler(func=lambda callback: callback.data in ['55','145','290','2900'])
+@bot.callback_query_handler(func=lambda callback: callback.data in ['20','123','247','699','1349','2300'])
 def handle_paid_key(callback):
     handle_paid_key.price = callback.data
     user_key_id = f'{user_id(callback)}'
