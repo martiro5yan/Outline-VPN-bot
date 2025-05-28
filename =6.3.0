@@ -1,0 +1,15 @@
+Defaulting to user installation because normal site-packages is not writeable
+Collecting YooMoney==0.1.1
+  Downloading YooMoney-0.1.1-py3-none-any.whl.metadata (8.3 kB)
+Collecting pyTelegramBotAPI
+  Downloading pytelegrambotapi-4.26.0-py3-none-any.whl.metadata (48 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 48.1/48.1 kB 760.7 kB/s eta 0:00:00
+Requirement already satisfied: requests in /usr/lib/python3/dist-packages (2.31.0)
+Collecting outline-vpn-api
+  Downloading outline_vpn_api-6.3.0-py3-none-any.whl.metadata (2.0 kB)
+Downloading YooMoney-0.1.1-py3-none-any.whl (26 kB)
+Downloading pytelegrambotapi-4.26.0-py3-none-any.whl (270 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 270.5/270.5 kB 4.6 MB/s eta 0:00:00
+Downloading outline_vpn_api-6.3.0-py3-none-any.whl (5.6 kB)
+Installing collected packages: YooMoney, pyTelegramBotAPI, outline-vpn-api
+Successfully installed YooMoney-0.1.1 outline-vpn-api-6.3.0 pyTelegramBotAPI-4.26.0

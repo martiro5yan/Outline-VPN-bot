@@ -1,0 +1,36 @@
+Traceback (most recent call last):
+  File "/home/martirosyan/Outline-VPN-bot/main.py", line 7, in <module>
+    import outline
+  File "/home/martirosyan/Outline-VPN-bot/outline.py", line 12, in <module>
+    client = OutlineVPN(api_url=api_url, cert_sha256=cert_sha256)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/martirosyan/.local/lib/python3.12/site-packages/outline_vpn/outline_vpn.py", line 84, in __init__
+    raise OutlineLibraryException(
+outline_vpn.outline_vpn.OutlineLibraryException: No certificate SHA256 provided. Running without certificate is no longer supported.
+Traceback (most recent call last):
+  File "/home/martirosyan/Outline-VPN-bot/main.py", line 7, in <module>
+    import outline
+  File "/home/martirosyan/Outline-VPN-bot/outline.py", line 12, in <module>
+    client = OutlineVPN(api_url=api_url, cert_sha256=cert_sha256)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/martirosyan/.local/lib/python3.12/site-packages/outline_vpn/outline_vpn.py", line 84, in __init__
+    raise OutlineLibraryException(
+outline_vpn.outline_vpn.OutlineLibraryException: No certificate SHA256 provided. Running without certificate is no longer supported.
+Traceback (most recent call last):
+  File "/home/martirosyan/Outline-VPN-bot/main.py", line 7, in <module>
+    import outline
+  File "/home/martirosyan/Outline-VPN-bot/outline.py", line 12, in <module>
+    client = OutlineVPN(api_url=api_url, cert_sha256=cert_sha256)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/martirosyan/.local/lib/python3.12/site-packages/outline_vpn/outline_vpn.py", line 84, in __init__
+    raise OutlineLibraryException(
+outline_vpn.outline_vpn.OutlineLibraryException: No certificate SHA256 provided. Running without certificate is no longer supported.
+Traceback (most recent call last):
+  File "/home/martirosyan/Outline-VPN-bot/main.py", line 7, in <module>
+    import outline
+  File "/home/martirosyan/Outline-VPN-bot/outline.py", line 12, in <module>
+    client = OutlineVPN(api_url=api_url, cert_sha256=cert_sha256)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/martirosyan/.local/lib/python3.12/site-packages/outline_vpn/outline_vpn.py", line 84, in __init__
+    raise OutlineLibraryException(
+outline_vpn.outline_vpn.OutlineLibraryException: No certificate SHA256 provided. Running without certificate is no longer supported.
