@@ -45,14 +45,14 @@ def delete_key():
 
 # Словарь команд
 dictionary_commands = {
-    'listkeys': list_keys,
-    'createkey': create_new_key,
-    'deletekey': delete_key
+    'lk': list_keys,
+    'ck': create_new_key,
+    'dk': delete_key
 }
 
 # Обработка команды из аргументов
 if len(sys.argv) < 2:
-    print(f"{Fore.RED}❌ Не указана команда. Доступные команды: listkeys, createkey, deletekey")
+    print(f"{Fore.RED}❌ Не указана команда. Доступные команды: , lk,ck,dk")
     sys.exit(1)
 
 func_name = sys.argv[1]
