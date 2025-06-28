@@ -5,14 +5,14 @@ load_dotenv('config.env')
 
 admin_id = os.getenv('TELEGRAM_ADMIN_ID')
 del_script = '/home/abragill/Outline-VPN-bot/delete_key_trial.py'
-del_script_sub = '/home/abragill/Outline-VPN-bot/delete_key_and_subscription.py '
+del_script_sub = '/home/abragill/Outline-VPN-bot/delete_key_and_subscription.py'
 
 def start_timer_trial(user_id):
     if str(user_id) == admin_id:
         print('Старт таймера на админа')
-        os.system(f"echo 'python3 {del_script} {user_id}' | at now +1 minute")
+        os.system(f"echo 'python3 /home/abragill/Outline-VPN-bot/delete_key_trial.py {user_id}' | at now +1 minute")
     else:
-        os.system(f"echo 'python3 {del_script} {user_id}' | at now +3 days")
+        os.system(f"echo 'python3 /home/abragill/Outline-VPN-bot/delete_key_trial.py {user_id}' | at now +3 days")
 
 def start_timer(user_id,subscription_period):
     if str(user_id) == admin_id:
