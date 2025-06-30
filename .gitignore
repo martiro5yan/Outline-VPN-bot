@@ -1,8 +1,8 @@
 *.env
+users.db
 webhook.key
 webhook.pem
 createTocen.py
 alert.py
 om.py
 __pycache__
-*.db
