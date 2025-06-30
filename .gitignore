@@ -5,3 +5,4 @@ createTocen.py
 alert.py
 om.py
 __pycache__
+*.db

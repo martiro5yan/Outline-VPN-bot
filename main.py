@@ -87,7 +87,7 @@ def trial(callback):
         if outline.user_key_info(user_key_id):
             key = outline.create_new_key(key_id=user_key_id, name=str(user_id(callback)))
 
-            text_message = (f"У вас есть 3 дня пробного периода!\n\n```{key.access_url+'#Telegram Bot: @vpnyt_bot'}```")
+            text_message = (f"У вас есть 3 дня пробного периода!\n\n```{key.access_url+'#@vpnyt_bot'}```")
             bot.send_message(callback.message.chat.id, text_message,parse_mode='Markdown')
             print(user_id(callback),type(user_id(callback)))
             start_at_timer.start_timer_trial(user_id(callback))
@@ -188,13 +188,13 @@ def check_payment_status(callback):
         key = outline.create_new_key(key_id=user_key_id, name=str(user_id(callback)))
         if database.is_user_in_db(user_id(callback)):
             database.update_purchased_key(user_id(callback),key.access_url,int(subscription_period))
-            text_message = (f"Оплата подтверждена! Ваш ключ обновлен,вставте его в приложении Outline\n\n'Метка об оплате-{libel}\n\n```{key.access_url+'#Telegram Bot: @vpnyt_bot'}```")
+            text_message = (f"Оплата подтверждена! Ваш ключ обновлен,вставте его в приложении Outline\n\n'Метка об оплате-{libel}\n\n```{key.access_url+'#@vpnyt_bot'}```")
             bot.send_message(callback.message.chat.id, text_message,parse_mode='Markdown')
             start_at_timer.start_timer(user_id(callback),subscription_period)
         else:    
             database.add_db(user_id(callback), first_name, last_name, key.access_url,int(subscription_period))
             start_at_timer.start_timer(user_id(callback),subscription_period)
-            text_message = (f"Оплата подтверждена! Ваш ключ активирован.\n'Метка об оплате-{libel}\n```{key.access_url+'#Telegram Bot: @vpnyt_bot'}```")
+            text_message = (f"Оплата подтверждена! Ваш ключ активирован.\n'Метка об оплате-{libel}\n```{key.access_url+'#@vpnyt_bot'}```")
             bot.send_message(callback.message.chat.id, text_message,parse_mode='Markdown')
         
         # Удаление кнопок "Оплатить" и "Проверить оплату"

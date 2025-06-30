@@ -1,5 +1,0 @@
-Traceback (most recent call last):
-  File "/home/martirosyan/Outline-VPN-bot/support.py", line 10, in <module>
-    SUPPORT_CHAT_ID = int(os.getenv('SUPPORT_CHAT_ID'))  # Убедитесь, что это int
-                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-TypeError: int() argument must be a string, a bytes-like object or a real number, not 'NoneType'
