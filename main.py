@@ -49,17 +49,17 @@ def user_data(data):
 def start(message):
 
     user_tg_id = message.chat.id
-    if database.user_exists(user_tg_id) and database.can_use_discount(user_tg_id):
-        price_month = '123'
-        start_message = text.discount_month
-    else:
-        price_month = '247'
-        start_message =  text.start_message
+    # if database.user_exists(user_tg_id) and database.can_use_discount(user_tg_id):
+    #     price_month = '123'
+    #     start_message = text.discount_month
+    # else:
+    price_month = '247'
+    start_message =  text.start_message
 
     if invoice_management.check_token_validity():
         markup = types.InlineKeyboardMarkup()
         markup.add(types.InlineKeyboardButton('Попробовать бесплатно', callback_data='trial'))
-        markup.add(types.InlineKeyboardButton('1 день 20 ₽', callback_data='20'))
+        markup.add(types.InlineKeyboardButton('1 день 50 ₽', callback_data='50'))
         markup.add(types.InlineKeyboardButton(f'1 месяц {price_month} ₽', callback_data=price_month))
         markup.add(types.InlineKeyboardButton(f'3 месяца 699 ₽', callback_data='699'))
         markup.add(types.InlineKeyboardButton(f'6 месяцев 1349 ₽', callback_data='1349'))
@@ -87,7 +87,7 @@ def trial(callback):
         if outline.user_key_info(user_key_id):
             key = outline.create_new_key(key_id=user_key_id, name=str(user_id(callback)))
 
-            text_message = (f"У вас есть 3 дня пробного периода!\n\n```{key.access_url+'#@vpnyt_bot'}```")
+            text_message = (f"У вас есть 1 день пробного периода!\n\n```{key.access_url+'#@vpnyt_bot'}```")
             bot.send_message(callback.message.chat.id, text_message,parse_mode='Markdown')
             print(user_id(callback),type(user_id(callback)))
             start_at_timer.start_timer_trial(user_id(callback))
@@ -130,7 +130,7 @@ def return_user_keys(callback):
         bot.send_message(callback.chat.id, 'Активных ключей нет!')
 
 # Обработчик callback'ов для тарифов
-@bot.callback_query_handler(func=lambda callback: callback.data in ['20','123','247','699','1349','2300'])
+@bot.callback_query_handler(func=lambda callback: callback.data in ['50','123','247','699','1349','2300'])
 def handle_paid_key(callback):
     handle_paid_key.price = callback.data
     user_key_id = f'{user_id(callback)}'
@@ -166,7 +166,7 @@ def check_payment_status(callback):
     # Переписать этот стыд
     if handle_paid_key.price == '247' or handle_paid_key.price == '123':
         subscription_period = '30'
-    elif handle_paid_key.price == '20':
+    elif handle_paid_key.price == '50':
         subscription_period = '1'
     elif handle_paid_key.price == '699':
         subscription_period = '90'

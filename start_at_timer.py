@@ -12,7 +12,7 @@ def start_timer_trial(user_id):
         print('Старт таймера на админа')
         os.system(f"echo 'python3 /home/abragill/Outline-VPN-bot/delete_key_trial.py {user_id}' | at now +1 minute")
     else:
-        os.system(f"echo 'python3 /home/abragill/Outline-VPN-bot/delete_key_trial.py {user_id}' | at now +3 days")
+        os.system(f"echo 'python3 /home/abragill/Outline-VPN-bot/delete_key_trial.py {user_id}' | at now +1 days")
 
 def start_timer(user_id,subscription_period):
     if str(user_id) == admin_id:

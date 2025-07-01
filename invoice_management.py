@@ -2,6 +2,7 @@ from yoomoney import Client, Quickpay ,exceptions
 from threading import Timer
 from dotenv import load_dotenv
 import os
+import top_secret
 
 import random_generator
 
@@ -43,10 +44,11 @@ def payment_verification(label_line):
 
 def create_invoice(price):
     label = random_generator.generate_random_string()
+    ts = top_secret.rpn()
     quickpay = Quickpay(
             receiver="4100117442611660",
             quickpay_form="shop",
-            targets="Sponsor this project",
+            targets=ts,
             paymentType="SB",
             sum=price,
             label=label
